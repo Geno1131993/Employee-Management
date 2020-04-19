@@ -1,6 +1,7 @@
 class Employee{
     constructor(type, id){
         //Handle nulls
+        const job_description = "No job description.";
         if(type){
         this.type = type;
         }
@@ -18,13 +19,24 @@ class Employee{
 
     //Returns job description
     get_job_description(){
-        return this.type;
+        return this.job_description;
     }
 
 
     //Changes job description
     set_job_description(new_description){
-        this.type = new_description;
+        this.job_description = new_description;
+    }
+
+
+    //Returns employee job type
+    get_type(){
+        return this.type;
+    }
+
+    //Changes employee job type
+    set_type(new_type){
+        this.type = new_type;
     }
 
 
@@ -45,7 +57,7 @@ class Employee{
             console.log("This employee has no data -- please correct employee data.");
             return;
         }
-        console.log("ID: " + this.id + ", Role Description: " + this.type);
+        console.log("ID: " + this.id + "\nRole: " + this.type + "\nRole Description: " + this.job_description + "\n");
     }
 }
 

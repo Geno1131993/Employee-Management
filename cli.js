@@ -1,11 +1,6 @@
-const Employees = require("./employee");
+const Engineer = require ("./engineer");
+
+const e = new Engineer("1234", "Geno1131993");
 
 
 
-const employees = [];
-
-
-const employee = new Employees("manager", "1234");
-//const employee = new Employees();
-
-employee.print_stats();
