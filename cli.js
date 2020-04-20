@@ -7,7 +7,6 @@ const fs = require("fs");
 const util = require("util");
 const write = util.promisify(fs.writeFile);
 const employees = [];
-var finished = false;
 
 
 console.log("Welcome to the Employee Roster Management!");
@@ -136,13 +135,14 @@ async function prompt_user(){
         prompt_done();
 
     }).then(async function(){
-        // console.log(employees);  
-        fs.writeFile("./templates/main.html", build_html(), function(err){
+        console.log(employees);  
+        write("./templates/main.html", build_html(), function(err){
             if(err){
                 console.log(err);
             }
         });
          
+        console.log(build_html());
     }).catch(function(err){
         console.log(err);
     });
@@ -166,7 +166,7 @@ async function write_to_html(html){
 
 
 async function build_html(){
-    const html = `
+    let html = `
         <!DOCTYPE html>
         <html lang = "en">
         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
