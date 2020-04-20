@@ -1,5 +1,5 @@
 class Employee{
-    constructor(name, type, id){
+    constructor(type, id){
         //Handle nulls
         this.job_description = "No job description.";
         this.name = "N/A";

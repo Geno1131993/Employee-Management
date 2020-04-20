@@ -14,7 +14,7 @@ console.log("Welcome to the Employee Roster Management!");
 
 
 
-function prompt(){
+async function prompt(){
     return inquirer.prompt([
         {
             type: "input",
@@ -41,7 +41,13 @@ function prompt(){
             type: "input",
             name: "email",
             message: "What is employee's email address? "
+        },
+        {
+            type: "input",
+            name: "job_description",
+            message: "What is the employee's job description? "
         }
+
 
 
 
@@ -49,7 +55,7 @@ function prompt(){
 }
 
 
-function done(){
+async function done(){
     return inquirer.prompt([
         {
             type: "list",
@@ -64,34 +70,37 @@ function done(){
 }
 
 
-function intern(){
+
+//Not currently supported
+async function intern(){
     return inquirer.prompt([
         {
             type: "input",
             name: "school",
             message: "What school is the intern attending? "
-
         }
     ]);
 }
 
 
-function prompt_done(){
-    done().then(function(fin){
 
+async function prompt_done(){
+    done().then(async function(fin){
         if(fin["finished"] == "Yes"){
             prompt_user();
         }
-    }).catch(function(err){
+    }).catch(async function(err){
         console.log(err);
     });
 
 }
 
-function prompt_intern(){
-    intern().then(function(intern){
+
+//Not currently supported
+async function prompt_intern(){
+    intern().then(async function(intern){
         console.log(intern);
-    }).catch(function(err){
+    }).catch(async function(err){
         console.log(err);
     });
 }
@@ -99,29 +108,41 @@ function prompt_intern(){
 
 
 
-function prompt_user(){
-    prompt().then(function(response) {
+async function prompt_user(){
+    prompt().then(async function(response) {
         console.log(response);
         var e = new Employee();
-         if(response["emp_type"] == "Intern"){
+
+        if(response["emp_type"] == "Intern"){
              //"School" isn't supported yet -- having issues with asynchronous operations
             e = new Intern(response["id"]);
+            //prompt_intern();
          }
-         if(response["emp_type"] == "Manager"){
+
+        if(response["emp_type"] == "Manager"){
              //"Office phone" isn't supported yet -- having issues with asynchronous operations
             e = new Manager(response["id"]);
         }
+
         if(response["emp_type"] == "Engineer"){
             //"GitHub" isn't supported yet -- having issues with asynchoronous operations
             e = new Engineer(response["id"]);
         }
-        
+
         e.set_email(response["email"]);
         e.set_name(response["name"]);
-
+        e.set_job_description(response["job_description"]);
+        employees.push(e);
         prompt_done();
-    }).then(function(){
-        console.log(employees);   
+
+    }).then(async function(){
+        // console.log(employees);  
+        fs.writeFile("./templates/main.html", build_html(), function(err){
+            if(err){
+                console.log(err);
+            }
+        });
+         
     }).catch(function(err){
         console.log(err);
     });
@@ -131,7 +152,20 @@ function prompt_user(){
 prompt_user();
 
 
-function build_html(name, id, type, job_description){
+async function write_to_html(html){
+    fs.writeFile("./templates/main.html", html, function(err){
+        if(err){
+            return console.log(err);
+        }
+        console.log("Check html output.");
+    });
+
+
+}
+
+
+
+async function build_html(){
     const html = `
         <!DOCTYPE html>
         <html lang = "en">
@@ -143,8 +177,6 @@ function build_html(name, id, type, job_description){
              Employee Roster
             </title>
         </head>
-
-
 
         <body>
          <div id = "header">
@@ -164,14 +196,38 @@ function build_html(name, id, type, job_description){
                 </nav>
             </div>
 
+            <div class = "tile is-ancestor">
+            <div id = "roster" class = "tile is-vertical is-10">
+                <div class = "tile is-parent"></div>
+
             `;
 
 
 
-         `</body>
+        for(let i = 0; i < employees.length; i++){
+            html += `
+
+                        <div class = "tile is-child">
+                           <div class = "tile is-horizontal is-2">
+                            <div class = "tile is-parent">
+                                ${employees[i]["name"]}
+                            <div>
+                                <div class = "tile is-child">
+                                    <ul>
+                                        <li> ID: ${employees[i]["id"]} </li>
+                                        <li> ${employees[i]["type"]} </li>
+                                        <li> ${employees[i]["job_description"]} </li>
+                                    </ul>
+                                </div>
+                           </div>
+                       
+             `;
+        }
+    
 
 
-    </html>`;
+    html += `</div></div></div></body></html>`;
+    return html;
 }
 
 
