@@ -3,7 +3,6 @@ const Employee = require("./employee");
 class Engineer extends Employee{
     constructor(id, github){
         super("Engineer", id);
-        this.set_ID(id);
         if(github){
             this.set_github(github);
         }
