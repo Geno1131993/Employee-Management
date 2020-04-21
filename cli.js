@@ -152,7 +152,7 @@ async function prompt_user(){
 prompt_user();
 
 
-async function write_to_html(html){
+function write_to_html(html){
     fs.writeFile("./templates/main.html", html, function(err){
         if(err){
             return console.log(err);
@@ -165,7 +165,7 @@ async function write_to_html(html){
 
 
 
-async function build_html(){
+function build_html(){
     let html = `
         <!DOCTYPE html>
         <html lang = "en">
